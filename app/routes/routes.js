@@ -1,14 +1,3 @@
-/*
- TODO:
- * [x] Create an { Express } object
- * [x] Create a { Morgan } object
- * [x] Import { config.js } from "./config/config.js"
-
- * [x] Import all { api } files from "./api"
- * [x] Initialize { api } with middlewares using { app.use() }
- * [x] Handle Internal server error (500) and also Not found error(404)
- */
-
 // npm modules
 const express = require("express"),
   morgan = require("morgan"),
