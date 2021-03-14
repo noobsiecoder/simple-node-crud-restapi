@@ -1,2 +1,3 @@
-# simple-node-crud-restapi
- A simple implentation of Restful API CRUD using Node.js
+# Simple Node CRUD RESTful API
+
+A simple implentation of Restful API CRUD using Node.js
