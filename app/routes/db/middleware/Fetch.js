@@ -14,7 +14,7 @@ class FetchUserData {
     return result;
   }
 
-  // Asynchronous function to fetch only { email, password } in database from user's request
+  // Asynchronous function to fetch { email, password } in database from user's request
   async fetchUserEmailAndPassword({ email, password }) {
     const result = await userData
       .find({
