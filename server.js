@@ -6,14 +6,14 @@ const http = require("http"),
   mongoose = require("mongoose");
 
 // Custom module
-const CONFIG = require("./app/config/config"),
+const { URI, DB_DETAILS } = require("./app/config/config"),
   expressApp = require("./app/routes/routes");
 
 // Sensitive data from config file
-const PORT = CONFIG.PORT_NUMBER || 3000,
-  dbUserName = CONFIG.DB_USERNAME,
-  dbPassword = CONFIG.DB_PASSWORD,
-  dbName = CONFIG.DB_NAME;
+const PORT = URI.PORT_NUMBER || 3000,
+  dbUserName = DB_DETAILS.DB_USERNAME,
+  dbPassword = DB_DETAILS.DB_PASSWORD,
+  dbName = DB_DETAILS.DB_NAME;
 
 // MongoDB URI
 const mongoDbUri = `mongodb+srv://${dbUserName}:${dbPassword}@cluster0.cwp3t.mongodb.net/${dbName}?retryWrites=true&w=majority`;

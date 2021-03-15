@@ -1,10 +1,11 @@
 // npm modules
 const express = require("express"),
   morgan = require("morgan"),
+  cookieParser = require("cookie-parser"),
   app = express();
 
 // Custom modules
-const CONFIG = require("../config/config");
+const { ROUTE } = require("../config/config");
 
 // API modules
 const signUpUser = require("./api/signup"),
@@ -13,16 +14,21 @@ const signUpUser = require("./api/signup"),
   logoutUser = require("./api/logout"),
   deleteUser = require("./api/delete");
 
+// Express response Module
+const expressResponse = require("./api/middleware/Response");
+
+// Using NPM middlewares
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser());
 
 // REST API middlewares
 app
-  .use(CONFIG.SIGN_UP_ROUTE, signUpUser)
-  .use(CONFIG.SIGN_IN_ROUTE, signInUser)
-  .use(CONFIG.UPDATE_ROUTE, forgotPassword)
-  .use(CONFIG.LOGOUT_ROUTE, logoutUser)
-  .use(CONFIG.DELETE_ROUTE, deleteUser);
+  .use(ROUTE.SIGN_UP_ROUTE, signUpUser)
+  .use(ROUTE.SIGN_IN_ROUTE, signInUser)
+  .use(ROUTE.UPDATE_ROUTE, forgotPassword)
+  .use(ROUTE.LOGOUT_ROUTE, logoutUser)
+  .use(ROUTE.DELETE_ROUTE, deleteUser);
 
 // Error handling - Handles 404 and 500 error
 app
@@ -32,10 +38,13 @@ app
     next(error);
   })
   .use((error, req, res, next) => {
-    res.status(error.status || 500);
-    res.json({
-      message: error.message,
-    });
+    // Handling respective error
+    expressResponse(
+      res,
+      error.status || 500,
+      req.path.replace("/", ""),
+      error.message
+    );
   });
 
 module.exports = app;

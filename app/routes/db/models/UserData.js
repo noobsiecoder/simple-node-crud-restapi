@@ -5,10 +5,6 @@ const mongoose = require("mongoose"),
 // MongoDB Schema
 const UserDataSchema = new Schema(
   {
-    uuid: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       unique: true,
@@ -16,10 +12,6 @@ const UserDataSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
-    },
-    session: {
-      type: Boolean,
       required: true,
     },
   },

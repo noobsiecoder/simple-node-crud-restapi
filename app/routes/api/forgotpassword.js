@@ -1,48 +1,68 @@
 // npm modules
 const express = require("express"),
-  router = express.Router();
+  router = express.Router(),
+  { isEmail } = require("validator");
 
 // Database module
-const fetchUserData = require("../db/middleware/Fetch"),
-  updateUserSession = require("../db/middleware/Update");
+const fetchUserObject = require("../db/middleware/Fetch"),
+  updateUserPassword = require("../db/middleware/Update");
 
 // Express response Module
-const expressResponse = require("./middleware/response");
+const expressResponse = require("./middleware/Response");
+
+// Middleware
+const HashPassword = require("./middleware/Hash"),
+  JWT = require("./middleware/JWT"),
+  Cookie = require("./middleware/Cookie");
 
 // POST request for "/update"
 router.post("/", async (req, res) => {
-  const userData = {
-    email: req.body.email,
-    password: req.body.password,
-    session: true,
-  };
-  // Fetch { email } of correspoding userData from database
-  let mongoResponse = await fetchUserData.fetchUserEmail(userData);
+  if (isEmail(req.body.email)) {
+    /*
+     * Success Condition
+     * If { Email } is a valid string, then the data can be processed
+     */
+    // Hashing password and retrieving it by resolving "Promise"
+    const hashedPassword = await HashPassword.hashPassword(
+      req.body.password
+    ).then((res) => res);
 
-  // Handling error
-  if (mongoResponse.length === 0) {
-    /*
-     * Error Function
-     * If returned { mongoResponse } array's length is {0} then user doesn't exists
-     * HTTP Status Code: 404 -> Resource not found
-     */
-    expressResponse(res, 404, "update", "USER DOESN'T EXIST!");
-  } else if (!mongoResponse[0].session) {
-    /*
-     * Error Function
-     * If returned { mongoResponse } session is { false }, then we don't allow to change password
-     * HTTP Status Code: 403 -> Forbidden
-     */
-    expressResponse(res, 403, "update", "FORBIDDEN FROM ENTERING!");
+    // Object containing requested data from client with { password } being hashed
+    const userData = {
+      email: req.body.email,
+      password: hashedPassword,
+    };
+
+    // Fetch { email } of correspoding userData from database
+    let mongoResponse = await fetchUserObject.fetchUserByEmail(userData);
+
+    // Handling error
+    if (mongoResponse.length === 0) {
+      /*
+       * Error Function
+       * If returned { mongoResponse } array's length is {0} then user doesn't exists
+       * HTTP Status Code: 404 -> Resource not found
+       */
+      expressResponse(res, 404, "update", "USER DOESN'T EXIST!");
+    } else {
+      /*
+       * Success Function
+       * If returned { mongoResponse } array's length is more than {0} then user exists
+       * Update { password } corresponding to requested { email }
+       * HTTP Status Code: 202 -> Accepted
+       */
+      mongoResponse = await updateUserPassword(userData);
+      const issuedToken = JWT.issueToken(mongoResponse._id); // JWT is issued with { _id } being the payload
+      Cookie.setCookies(res, issuedToken); // Cookie is set in client side with { isseudToken }
+      expressResponse(res, 202, "update", issuedToken);
+    }
   } else {
     /*
-     * Success Function
-     * If returned { mongoResponse } array's length is more than {0} and { session } is { true } then user exists and is logged in
-     * Update user's { password, session } to { req.body.password, true }
-     * HTTP Status Code: 200 -> OK
+     * Error Condition
+     * If { Email } is not a valid string, then the data cannot be be processed
+     * HTTP Status Code: 422 -> Unprocessable entity
      */
-    mongoResponse = await updateUserSession.updatePassword(userData);
-    expressResponse(res, 200, "update", mongoResponse);
+    expressResponse(res, 422, "update", "Email ID entered isn't valid");
   }
 });
 
