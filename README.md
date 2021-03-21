@@ -8,9 +8,9 @@
 
 ## 🧾 Table of contents
 
-- [Installation](#🚀-Installation)
-- [What is a RESTful API?](#🤔-What-is-a-RESTful-API?)
-- [Technology used](#🔨-Technology-used)
+- [Installation](#-Installation)
+- [What is a RESTful API?](#-What-is-a-RESTful-API?)
+- [Technology used](#-Technology-used)
 
 ### 🚀 Installation
 
