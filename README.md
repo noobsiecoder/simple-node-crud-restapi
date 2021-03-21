@@ -9,7 +9,7 @@
 ## 🧾 Table of contents
 
 - [Installation](#-installation)
-- [What is a RESTful API?](#-what-is-a-RESTful-API?)
+- [What is a RESTful API?](#-what-is-a-restful-api)
 - [Technology used](#-technology-used)
 
 ### 🚀 Installation
