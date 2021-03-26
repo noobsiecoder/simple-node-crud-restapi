@@ -2,8 +2,9 @@
 const userData = require("../models/UserData");
 
 // Asynchronous function to create new userData in database
-const createNewUserData = async ({ email, password }) => {
+const createNewUserData = async ({ username, email, password }) => {
   const data = new userData({
+    username: username,
     email: email,
     password: password,
   });

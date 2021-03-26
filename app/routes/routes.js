@@ -2,6 +2,7 @@
 const express = require("express"),
   morgan = require("morgan"),
   cookieParser = require("cookie-parser"),
+  cors = require("cors"),
   app = express();
 
 // Custom modules
@@ -21,6 +22,12 @@ const expressResponse = require("./api/middleware/Response");
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // REST API middlewares
 app

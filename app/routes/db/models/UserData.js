@@ -5,6 +5,10 @@ const mongoose = require("mongoose"),
 // MongoDB Schema
 const UserDataSchema = new Schema(
   {
+    username: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       unique: true,

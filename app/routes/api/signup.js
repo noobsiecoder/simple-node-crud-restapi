@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
 
     // Object containing requested data from client with { password } being hashed
     const userData = {
+      username: req.body.name,
       email: req.body.email,
       password: hashedPassword,
     };

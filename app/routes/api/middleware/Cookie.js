@@ -18,6 +18,8 @@ class Cookies {
     res.cookie(this.cookieName, cookie, {
       maxAge: 1000 * 60 * 60, // 1 hour
       httpOnly: true, // { httpOnly } is flag to secure our webapp's cookie set. This prevents JavaScript code to access these cookies
+      path: "/",
+      sameSite: true,
     });
   }
 
